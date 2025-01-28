@@ -1,0 +1,273 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33860603",
+        "attribution": "GeoBase\u00ae",
+        "attribution_name": "Statistics Canada",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "3875820",
+        "id": "SoUxk2MqTGWrh6LCpejrXA"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0154768,
+            44.9976107
+          ],
+          [
+            -78.0151631,
+            44.9985207
+          ],
+          [
+            -78.0150674,
+            44.9988963
+          ],
+          [
+            -78.0150863,
+            44.9992659
+          ],
+          [
+            -78.0152122,
+            45.0000163
+          ],
+          [
+            -78.0151898,
+            45.0004478
+          ],
+          [
+            -78.0150938,
+            45.0010755
+          ]
+        ]
+      },
+      "id": "way/33860603"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33861031",
+        "attribution": "GeoBase\u00ae",
+        "attribution_name": "Statistics Canada",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "1782238"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0149898,
+            45.0018559
+          ],
+          [
+            -78.0149546,
+            45.002044
+          ],
+          [
+            -78.0148836,
+            45.0022255
+          ],
+          [
+            -78.0147703,
+            45.0024173
+          ],
+          [
+            -78.014545,
+            45.0026004
+          ]
+        ]
+      },
+      "id": "way/33861031"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33865845",
+        "attribution": "GeoBase\u00ae",
+        "attribution_name": "Statistics Canada",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "1782242"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0150938,
+            45.0010755
+          ],
+          [
+            -78.0150957,
+            45.0012825
+          ],
+          [
+            -78.0149898,
+            45.0018559
+          ]
+        ]
+      },
+      "id": "way/33865845"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33865995",
+        "attribution": "GeoBase\u00ae",
+        "attribution_name": "Statistics Canada",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "1782228"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.014545,
+            45.0026004
+          ],
+          [
+            -78.0142837,
+            45.0027466
+          ],
+          [
+            -78.0131109,
+            45.003094
+          ]
+        ]
+      },
+      "id": "way/33865995"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33951420",
+        "attribution": "GeoBase\u00ae",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "3810814"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0153559,
+            44.9962753
+          ],
+          [
+            -78.0155371,
+            44.9964511
+          ],
+          [
+            -78.0156192,
+            44.9965792
+          ],
+          [
+            -78.015661,
+            44.9967514
+          ],
+          [
+            -78.0156629,
+            44.9969585
+          ],
+          [
+            -78.0154768,
+            44.9976107
+          ]
+        ]
+      },
+      "id": "way/33951420"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33957091",
+        "attribution": "GeoBase\u00ae",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Sprucedale Street",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "1780231"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0145993,
+            44.9956321
+          ],
+          [
+            -78.014918,
+            44.9959128
+          ],
+          [
+            -78.0153559,
+            44.9962753
+          ]
+        ]
+      },
+      "id": "way/33957091"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/33862997",
+        "attribution": "GeoBase\u00ae",
+        "attribution_name": "Statistics Canada",
+        "geobase:acquisitionTechnique": "GPS",
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Birch Place",
+        "source": "Geobase_Import_2009",
+        "statscan:rbuid": "1782237",
+        "id": "pF9EIJWrT0u8TLCMfQIYgg"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.0149898,
+            45.0018559
+          ],
+          [
+            -78.0145843,
+            45.0018453
+          ],
+          [
+            -78.0142905,
+            45.0018826
+          ],
+          [
+            -78.0136073,
+            45.0020898
+          ],
+          [
+            -78.0132952,
+            45.0022346
+          ]
+        ]
+      },
+      "id": "way/33862997"
+    }
+  ]
+}

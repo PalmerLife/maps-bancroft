@@ -20,55 +20,11 @@
       bottom: 0;
       width: 100%;
     }
-    #controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: white;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-    }
-    button {
-      margin: 5px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #f0f0f0;
-    }
-
-    /* Ensure the map is visible when printing */
-    @media print {
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      #map {
-        width: 100%;
-        height: 100%;
-        position: static;
-        display: block;
-      }
-      #controls {
-        display: none; /* Hide controls in printout if desired */
-      }
-    }
   </style>
 </head>
 <body>
   <!-- Map container -->
   <div id="map"></div>
-
-  <!-- Controls container -->
-  <div id="controls">
-    <button id="export-view">Export Current View</button>
-    <button id="print-map">Print Map</button>
-  </div>
 
   <script>
     /**
@@ -354,25 +310,6 @@
         });
       }
     }
-
-    /**
-     * ==============================
-     *  Export & Print Handlers
-     * ==============================
-     */
-    // Export current map view
-    document.getElementById('export-view').addEventListener('click', () => {
-      const bounds = map.getBounds();
-      const center = map.getCenter();
-      const zoom = map.getZoom();
-      alert(`Bounds: ${JSON.stringify(bounds.toArray())}, Center: ${center}, Zoom: ${zoom}`);
-    });
-
-    // Print the map immediately (no extra clicks)
-    document.getElementById('print-map').addEventListener('click', () => {
-      // Force immediate print dialog
-      window.print();
-    });
   </script>
 </body>
 </html>

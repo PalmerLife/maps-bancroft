@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Road Map</title>
-  
+
   <!-- Mapbox GL JS -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
@@ -82,7 +82,6 @@
      * ===========================
      *  Parsing URL "roads"
      * ===========================
-     *
      * Check the URL for a "roads" parameter. Example:
      *   ?roads=SoUxk2MqTGWrh6LCpejrXA,pF9EIJWrT0u8TLCMfQIYgg
      */
@@ -92,7 +91,6 @@
       return roadsParam ? roadsParam.split(',') : [];
     }
     const selectedRoadIds = getRoadsFromURL();
-    // We'll only display a pin for the FIRST road (if any).
     const firstRoadId = selectedRoadIds.length > 0 ? selectedRoadIds[0] : null;
 
     /**
@@ -110,10 +108,6 @@
     // Navigation controls (zoom in/out, compass)
     map.addControl(new mapboxgl.NavigationControl());
 
-    /**
-     *  We'll store the bounding box for the FIRST road,
-     *  so if the user clicks the pin, we can "fly" to it.
-     */
     let firstRoadBounds = null;
 
     /**
@@ -140,7 +134,24 @@
         }
       });
 
-      // 3) Highlight layer for *all* selected roads
+      // 3) Add the border outline source
+      map.addSource('territory-border', {
+        type: 'geojson',
+        data: './territory_border_bancroft.geojson' // Border outline file
+      });
+
+      // 4) Add the border outline layer
+      map.addLayer({
+        id: 'territory-border-layer',
+        type: 'line',
+        source: 'territory-border',
+        paint: {
+          'line-color': '#000', // Border color (black)
+          'line-width': 3       // Border thickness
+        }
+      });
+
+      // 5) Highlight layer for *all* selected roads
       map.addLayer({
         id: 'highlight-road',
         type: 'line',
@@ -159,208 +170,60 @@
         ]
       });
 
-      // 4) If roads are selected, fetch data for bounding, doc title, and pin
+      // 6) If roads are selected, fetch data for bounding, doc title, and pin
       if (selectedRoadIds.length > 0) {
         fetch('./roads.geojson')
           .then(resp => resp.json())
           .then(data => {
-            // a) Update doc title to FIRST road's name
             setDocumentTitleFromFirstRoad(data, firstRoadId);
-
-            // b) Fit bounds to ALL selected roads
             const allRoadsBounds = getBoundsForSelectedRoads(data, selectedRoadIds);
-            if (allRoadsBounds) {
-              map.fitBounds(allRoadsBounds, { padding: 50 });
-            }
+            if (allRoadsBounds) map.fitBounds(allRoadsBounds, { padding: 50 });
 
-            // c) Build a marker for the FIRST road only (if pinCoords exist)
             const markerCoords = getPinCoordsForFirstRoad(data, firstRoadId);
             if (markerCoords) {
-              // Also store bounding box for the first road, so we can "fly" on pin click
-              const firstFeature = data.features.find(
-                f => f.properties && f.properties.id === firstRoadId
-              );
+              const firstFeature = data.features.find(f => f.properties?.id === firstRoadId);
               firstRoadBounds = firstFeature ? getBoundsForRoadFeature(firstFeature) : null;
 
-              // Create the marker with color #9CC6A1 (same style as permanent marker but different color)
               const firstRoadPin = new mapboxgl.Marker({ color: '#9CC6A1' })
                 .setLngLat(markerCoords)
                 .addTo(map);
 
-              // Add a click event to FLY to the bounding box of the first road
               if (firstRoadBounds) {
-                // Attach a click event to the marker's DOM element
                 firstRoadPin.getElement().addEventListener('click', () => {
-                  map.fitBounds(firstRoadBounds, {
-                    padding: 50,
-                    essential: true
-                  });
+                  map.fitBounds(firstRoadBounds, { padding: 50, essential: true });
                 });
               }
 
-              // We'll control pin visibility via zoom
-              // Hide or show by setting the element's display style
-              map.on('zoom', () => {
-                updatePinVisibility(firstRoadPin, map.getZoom());
-              });
-              // Also run once on load
+              map.on('zoom', () => updatePinVisibility(firstRoadPin, map.getZoom()));
               updatePinVisibility(firstRoadPin, map.getZoom());
             } else {
-              // If no pinCoords for first road, just do highlight
               map.on('zoom', updateZoomVisibilityNoPin);
               updateZoomVisibilityNoPin();
             }
           });
       } else {
-        // If no roads are selected, set up highlight logic but no pin
         map.on('zoom', updateZoomVisibilityNoPin);
         updateZoomVisibilityNoPin();
       }
 
-      // 5) Permanent teal marker (always visible, no click behavior)
+      // 7) Permanent teal marker (always visible, no click behavior)
       new mapboxgl.Marker({ color: '#3FB1CE' })
         .setLngLat([-77.87527721486875, 45.10679834454206])
         .addTo(map);
-    }); // end of on load
-
-    /**
-     * =========================================
-     *  setDocumentTitleFromFirstRoad
-     * =========================================
-     */
-    function setDocumentTitleFromFirstRoad(geojsonData, firstRoadId) {
-      if (!firstRoadId) return;
-      const feature = geojsonData.features.find(
-        f => f.properties && f.properties.id === firstRoadId
-      );
-      if (feature && feature.properties.name) {
-        document.title = feature.properties.name;
-      }
-    }
-
-    /**
-     * =========================================
-     *  getPinCoordsForFirstRoad
-     * =========================================
-     *  Returns the [lng, lat] from "pinCoords"
-     *  for the FIRST selected road, if any.
-     */
-    function getPinCoordsForFirstRoad(geojsonData, firstRoadId) {
-      if (!firstRoadId) return null;
-      const feature = geojsonData.features.find(
-        f => f.properties && f.properties.id === firstRoadId
-      );
-      if (!feature) return null;
-
-      const coords = feature.properties.pinCoords;
-      if (coords && Array.isArray(coords)) {
-        return coords;
-      }
-      return null;
-    }
-
-    /**
-     * =========================================
-     *  updatePinVisibility
-     * =========================================
-     *  - If zoom <= 12: pin is visible, highlight hidden.
-     *  - If zoom >= 13: pin is hidden, highlight shown at 60%.
-     */
-    function updatePinVisibility(pinMarker, zoom) {
-      if (zoom <= 12) {
-        // Show pin
-        pinMarker.getElement().style.display = 'block';
-        // Hide highlight
-        map.setPaintProperty('highlight-road', 'line-opacity', 0);
-      } else {
-        // Hide pin
-        pinMarker.getElement().style.display = 'none';
-        // Show highlight
-        map.setPaintProperty('highlight-road', 'line-opacity', 0.6);
-      }
-    }
-
-    /**
-     * =========================================
-     *  updateZoomVisibilityNoPin
-     * =========================================
-     *  For the scenario where there's no pin,
-     *  we always show highlight if roads are selected.
-     */
-    function updateZoomVisibilityNoPin() {
-      const zoom = map.getZoom();
-      if (zoom >= 13) {
-        map.setPaintProperty('highlight-road', 'line-opacity', 0.6);
-      } else {
-        map.setPaintProperty('highlight-road', 'line-opacity', 0);
-      }
-    }
-
-    /**
-     * =========================================
-     *  getBoundsForSelectedRoads
-     * =========================================
-     *  Aggregates bounding box across *all* selected roads.
-     */
-    function getBoundsForSelectedRoads(geojsonData, selectedIds) {
-      const bounds = new mapboxgl.LngLatBounds();
-      let extended = false;
-
-      geojsonData.features.forEach(feature => {
-        if (selectedIds.includes(feature.properties.id)) {
-          extendBounds(bounds, feature.geometry);
-          extended = true;
-        }
-      });
-      return extended ? bounds : null;
-    }
-
-    /**
-     * =========================================
-     *  getBoundsForRoadFeature
-     * =========================================
-     *  Returns bounding box for the geometry of
-     *  a single feature (LineString or MultiLineString).
-     */
-    function getBoundsForRoadFeature(feature) {
-      const bounds = new mapboxgl.LngLatBounds();
-      extendBounds(bounds, feature.geometry);
-      return bounds.isEmpty() ? null : bounds;
-    }
-
-    /**
-     * =========================================
-     *  extendBounds
-     * =========================================
-     *  Expands a LngLatBounds object to include
-     *  all coords of a geometry (LineString/MultiLineString).
-     */
-    function extendBounds(bounds, geometry) {
-      if (geometry.type === 'LineString') {
-        geometry.coordinates.forEach(coord => bounds.extend(coord));
-      } else if (geometry.type === 'MultiLineString') {
-        geometry.coordinates.forEach(line => {
-          line.forEach(coord => bounds.extend(coord));
-        });
-      }
-    }
-
-    /**
-     * ==============================
-     *  Export & Print Handlers
-     * ==============================
-     */
-    // Export current map view
-    document.getElementById('export-view').addEventListener('click', () => {
-      const bounds = map.getBounds();
-      const center = map.getCenter();
-      const zoom = map.getZoom();
-      alert(`Bounds: ${JSON.stringify(bounds.toArray())}, Center: ${center}, Zoom: ${zoom}`);
     });
 
-    // Print the map immediately (no extra clicks)
+    // Additional utility functions for titles, pin handling, zoom visibility, etc.
+    function setDocumentTitleFromFirstRoad(geojsonData, firstRoadId) { ... }
+    function getPinCoordsForFirstRoad(geojsonData, firstRoadId) { ... }
+    function updatePinVisibility(pinMarker, zoom) { ... }
+    function updateZoomVisibilityNoPin() { ... }
+    function getBoundsForSelectedRoads(geojsonData, selectedIds) { ... }
+    function getBoundsForRoadFeature(feature) { ... }
+    function extendBounds(bounds, geometry) { ... }
+
+    // Export & Print Handlers
+    document.getElementById('export-view').addEventListener('click', () => { ... });
     document.getElementById('print-map').addEventListener('click', () => {
-      // Force immediate print dialog, works in Safari/Chrome/Firefox
       window.print();
     });
   </script>
